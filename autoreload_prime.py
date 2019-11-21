@@ -14,20 +14,19 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
-
 """
     A module to automatically restart the server when a module is modified.
 """
-
 from __future__ import absolute_import
 from __future__ import print_function
+
 import functools
 import logging
 import os
 import sys
-import types
 import threading
 import time
+import types
 
 try:
     import signal
@@ -36,6 +35,7 @@ except ImportError:
 
 RELOAD_ATTEMPTED = False
 
+
 def start():
     print('Starting autoreload_prime...')
     modify_times = {}
@@ -43,6 +43,7 @@ def start():
     thread = threading.Thread(target=callback)
     thread.setDaemon(1)
     thread.start()
+
 
 def _reload_on_update(modify_times):
     global RELOAD_ATTEMPTED
@@ -61,14 +62,16 @@ def _reload_on_update(modify_times):
             # in the standard library), and occasionally this can cause strange
             # failures in getattr.  Just ignore anything that's not an ordinary
             # module.
-            if not isinstance(module, types.ModuleType): continue
+            if not isinstance(module, types.ModuleType):
+                continue
             path = getattr(module, "__file__", None)
-            if not path: continue
+            if not path:
+                continue
             if path.endswith(".pyc") or path.endswith(".pyo"):
                 path = path[:-1]
             try:
                 modified = os.stat(path).st_mtime
-            except:
+            except Exception:
                 continue
             if path not in modify_times:
                 modify_times[path] = modified
@@ -95,6 +98,5 @@ def _reload_on_update(modify_times):
                     # Unfortunately the errno returned in this case does not
                     # appear to be consistent, so we can't easily check for
                     # this error specifically.
-                    os.spawnv(os.P_NOWAIT, sys.executable,
-                              [sys.executable] + sys.argv)
+                    os.spawnv(os.P_NOWAIT, sys.executable, [sys.executable] + sys.argv)
                     sys.exit(0)

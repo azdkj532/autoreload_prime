@@ -19,6 +19,8 @@
     A module to automatically restart the server when a module is modified.
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
 import functools
 import logging
 import os
@@ -35,7 +37,7 @@ except ImportError:
 RELOAD_ATTEMPTED = False
 
 def start():
-    print 'Starting autoreload_prime...'
+    print('Starting autoreload_prime...')
     modify_times = {}
     callback = functools.partial(_reload_on_update, modify_times)
     thread = threading.Thread(target=callback)

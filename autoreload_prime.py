@@ -54,7 +54,9 @@ def _reload_on_update(modify_times):
     while True:
         time.sleep(0.05)
 
-        for module in sys.modules.values():
+        # The list call is necessary on Python 3 in case the module
+        # dictionary modifies during iteration.
+        for module in list(sys.modules.values()):
             # Some modules play games with sys.modules (e.g. email/__init__.py
             # in the standard library), and occasionally this can cause strange
             # failures in getattr.  Just ignore anything that's not an ordinary
